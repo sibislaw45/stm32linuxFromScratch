@@ -1,26 +1,12 @@
-#define USART1_DR (*((volatile unsigned int *)0x40011004))
+#include <asm/unistd.h>
+#include <asm-generic/fcntl.h>
 
-void _putchar(int c)
-{
-	volatile int i;
-	USART1_DR = c;
-	for (i = 0; i < 100000; i++) {
-	}
-}
-
-void _puts(char *str)
-{
-	while (*str) {
-		_putchar(*str);
-		str++;
-	}
-}
+int syscall(int nr, ...);
 
 int main()
 {	
-	_putchar('A');
-	_putchar('B');
-	_puts("A to jest string!");
+	syscall(__NR_open, "/dev/console", O_RDWR | O_NOCTTY | O_NONBLOCK, 0, 0);
+	syscall(__NR_write, 0, "test", 4, 0);
 	while (1) {}
 	return 0;
 }
